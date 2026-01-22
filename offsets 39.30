@@ -1,0 +1,107 @@
+Fortnite Build : ++Fortnite+Release-39.30-CL-49874243-Windows
+
+UnrealEngine ver: 5.8.0
+
+class UnrealWorldDecryption {
+
+ public :
+
+
+     inline uint64_t ROL8(uint64_t value, int shift) {  // Not Rn in need :soap:
+         shift &= 63;
+         if (shift == 0) return value;
+         return (value << shift) | (value >> (64 - shift));
+     }
+
+     inline uint64_t DecryptWorld(uint64_t value)
+     {
+         return (value ^ 0xFFFFFFFFD599D092ULL) + 0x248ULL;
+     }
+
+}; UnrealWorldDecryption* Decryption;
+
+use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(VirtualGlx + UWorld::GWorld)); 
+
+inline namespace UWorld {  
+	inline constexpr uintptr_t GWorld = 0x178C37A8; // UWorld* GWorld  0x17B96228
+	inline constexpr uintptr_t GNames = 0x17A50D00; // TArray<FNameEntry*> GNames
+	inline constexpr uintptr_t GameState = 0x1D0; // AGameStateBase* GameState
+	inline constexpr uintptr_t OwningGameInstance = 0x248; // UGameInstance* GameInstance
+	inline constexpr uintptr_t PersistentLevel = 0x40; // Ulevel* PersistentLevel
+	inline constexpr uintptr_t CameraLocation = 0x178; // FVector CameraLocation maybe 0x180
+	inline constexpr uintptr_t CameraRotation = 0x188; // FRotator CameraRatation  maybe 0x190
+}
+
+inline namespace UGameInstance {
+	inline constexpr uintptr_t LocalPlayers = 0x38; // TArray<ULocalPlayer*> LocalPlayers
+
+}
+
+inline namespace ULocalPlayer {
+	inline constexpr uintptr_t PlayerController = 0x30; // APlayerController* PlayerController
+
+}
+
+inline namespace APlayerController {
+	inline constexpr uintptr_t PlayerState = 0x2D0; // APlayerState* PlayerState
+	inline constexpr uintptr_t AcknowledgedPawn = 0x358; // APawn* AcknowledgedPawn
+	inline constexpr uintptr_t PlayerCameraManager = 0x360; // PlayerCameraManager* PlayerCameraManager
+
+}
+
+inline namespace ACharacter {
+	inline constexpr uintptr_t Mesh = 0x330; // USkeletalMeshComponent* Mesh
+	inline constexpr uintptr_t BoneArray = 0x5F0; // TArray<FNAME> BoneArray
+	inline constexpr intptr_t BoneArrayCached = 0x608; // TArray<FNAME> BoneArray + 0x10 
+
+}
+
+inline namespace APlayerState {
+	inline constexpr uintptr_t PawnPrivate = 0x328; // APawn* PawnPrivate
+
+}
+
+inline namespace AFortPlayerState  {
+	inline constexpr uintptr_t Platform = 0x440; // FString Platform
+	inline constexpr uintptr_t PlayerName = 0xA08; // FString PlayerName
+	inline constexpr uintptr_t HabaneroComponent = 0x948; // UFortHabaneroComponent* HabaneroComponent
+	inline constexpr uintptr_t RankedProgress = 0xD8; // int32_t RankedProgress
+
+}
+
+inline namespace AFortPlayerStateAthena{
+	inline constexpr uintptr_t TeamIndex = 0x11B1; // int32_t TeamIndex
+
+}
+
+inline namespace AGameStateBase {
+	inline constexpr uintptr_t PlayerArray = 0x2C8; // TArray<APlayerState*> PlayerArray
+
+}
+
+inline namespace AFortPawn {
+	inline constexpr uintptr_t CurrentWeapon = 0x990; // AFortWeapon* CurrentWeapon
+
+}
+
+inline namespace AFortWeapon {
+	inline constexpr uintptr_t WeaponData = 0x600; // UFortWeaponItemDefinition* WeaponData
+	inline constexpr uintptr_t AmmoCount = 0x11CC; // int32_t AmmoCount
+	inline constexpr uintptr_t ProjectileSpeed = 0x29DC; // ???
+	inline constexpr uintptr_t ProjectileGravity = 0x29E0; // ???
+	inline constexpr uintptr_t TargetedFortPawn = 0x1830;
+
+}
+
+inline namespace AActor {
+	inline constexpr uintptr_t RootComponent = 0x1b0; // USceneComponent* RootComponent
+
+}
+
+inline namespace USceneConponent {
+	inline constexpr uintptr_t RelativeRotation = 0x158; // FRotator RelativeRotation
+	inline constexpr uintptr_t RelativeLocation = 0x140; // FVector RelativeLocation
+	inline constexpr uintptr_t ComponentToWorld = 0x1e0; // FTransform ComponentToWorld
+	inline constexpr uintptr_t ComponentVelocity = 0x188; // FVector ComponentVelocity
+
+}
