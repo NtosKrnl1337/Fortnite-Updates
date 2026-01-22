@@ -13,10 +13,10 @@ class UnrealWorldDecryption {
          return (value << shift) | (value >> (64 - shift));
      }
 
-     inline uint64_t DecryptWorld(uint64_t value)
-     {
-         return (value ^ 0xFFFFFFFFD599D092ULL) + 0x248ULL;
-     }
+     inline uint64_t DecryptWorld(uint64_t world)
+    {
+      return (world ^ 0xFFFFFFFFD599D092ULL);
+    }
 
 }; UnrealWorldDecryption* Decryption;
 
@@ -28,8 +28,8 @@ inline namespace UWorld {
 	inline constexpr uintptr_t GameState = 0x1D0; // AGameStateBase* GameState
 	inline constexpr uintptr_t OwningGameInstance = 0x248; // UGameInstance* GameInstance
 	inline constexpr uintptr_t PersistentLevel = 0x40; // Ulevel* PersistentLevel
-	inline constexpr uintptr_t CameraLocation = 0x178; // FVector CameraLocation maybe 0x180
-	inline constexpr uintptr_t CameraRotation = 0x188; // FRotator CameraRatation  maybe 0x190
+	inline constexpr uintptr_t CameraLocation = 0x180; // FVector CameraLocation 
+	inline constexpr uintptr_t CameraRotation = 0x190; // FRotator CameraRatation  
 }
 
 inline namespace UGameInstance {
