@@ -1,107 +1,279 @@
-Fortnite Build : ++Fortnite+Release-39.30-CL-49874243-Windows
+Fortnite Build : ++Fortnite+Release-39.40-CL-50577083-Windows
 
 UnrealEngine ver: 5.8.0
 
 class UnrealWorldDecryption {
 
- public :
+public:
 
 
-     inline uint64_t ROL8(uint64_t value, int shift) {  // Not Rn in need :soap:
-         shift &= 63;
-         if (shift == 0) return value;
-         return (value << shift) | (value >> (64 - shift));
-     }
-
-     inline uint64_t DecryptWorld(uint64_t world)
-    {
-      return (world ^ 0xFFFFFFFFD599D092ULL);
+    inline uint64_t ROL8(uint64_t value, int shift) {
+        shift &= 63;
+        if (shift == 0) return value;
+        return (value << shift) | (value >> (64 - shift));
     }
 
+    inline uint64_t DecryptWorld(uint64_t world)
+    {
+        return  ~ROL8(world ^ 0x913F0DAFLL, 51);
+    }
+
+
 }; UnrealWorldDecryption* Decryption;
+use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(VirtualGlx + Offsets::Engine::GWorld)); 
 
-use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(VirtualGlx + UWorld::GWorld)); 
+namespace Offsets
+{
 
-inline namespace UWorld {  
-	inline constexpr uintptr_t GWorld = 0x178C37A8; // UWorld* GWorld  0x17B96228
-	inline constexpr uintptr_t GNames = 0x17A50D00; // TArray<FNameEntry*> GNames
-	inline constexpr uintptr_t GameState = 0x1D0; // AGameStateBase* GameState
-	inline constexpr uintptr_t OwningGameInstance = 0x248; // UGameInstance* GameInstance
-	inline constexpr uintptr_t PersistentLevel = 0x40; // Ulevel* PersistentLevel
-	inline constexpr uintptr_t CameraLocation = 0x180; // FVector CameraLocation 
-	inline constexpr uintptr_t CameraRotation = 0x190; // FRotator CameraRatation  
+	namespace Engine
+	{
+		constexpr uintptr_t GWorld = 0x1780BA78; // 48 33 05 ?? ?? ?? ?? 48 8B 80 50 01 00 00 48 85 C0 0F 84
+		constexpr uintptr_t GNames = 0x17A50D00;
+	}
+
+	class UWorld
+	{
+	public:
+		constexpr static uintptr_t GameState = 0x1D8;
+		constexpr static uintptr_t OwningGameInstance = 0x250;
+		constexpr static uintptr_t PersistentLevel = 0x40;
+		constexpr static uintptr_t CameraLocation = 0x180;
+		constexpr static uintptr_t CameraRotation = 0x190;
+	};
+
+	class UGameInstance
+	{
+	public:
+		constexpr static uintptr_t LocalPlayers = 0x38;
+	};
+
+	class ULocalPlayer
+	{
+	public:
+		constexpr static uintptr_t PlayerController = 0x30;
+	};
+
+	class APlayerController
+	{
+	public:
+		constexpr static uintptr_t PlayerState = 0x2D0;
+		constexpr static uintptr_t AcknowledgedPawn = 0x358;
+		constexpr static uintptr_t PlayerCameraManager = 0x360;
+	};
+
+	class APlayerState
+	{
+	public:
+		constexpr static uintptr_t PawnPrivate = 0x328;
+	};
+
+	class AFortPlayerState
+	{
+	public:
+		constexpr static uintptr_t Platform = 0x440;
+		constexpr static uintptr_t PlayerName = 0xA08;
+		constexpr static uintptr_t HabaneroComponent = 0x948;
+		constexpr static uintptr_t RankedProgress = 0xD8;
+	};
+
+	class AFortPlayerStateAthena
+	{
+	public:
+		constexpr static uintptr_t TeamIndex = 0x11B1;
+	};
+
+	class AGameStateBase
+	{
+	public:
+		constexpr static uintptr_t PlayerArray = 0x2C8;
+	};
+
+	class AActor
+	{
+	public:
+		constexpr static uintptr_t RootComponent = 0x1B0;
+	};
+
+	class ACharacter
+	{
+	public:
+		constexpr static uintptr_t Mesh = 0x330;
+	};
+
+	class AFortPawn
+	{
+	public:
+		constexpr static uintptr_t CurrentWeapon = 0x990;
+		constexpr static uintptr_t PreviousWeapon = 0x9C0;
+		constexpr static uintptr_t CurrentWeaponList = 0x9C8;
+		
+		constexpr static uintptr_t bIsDying = 0x728;
+		constexpr static uintptr_t bIsDBNO = 0x841;
+		constexpr static uintptr_t bWasDBNOOnDeath = 0x842;
+		constexpr static uintptr_t bIsInvulnerable = 0x72A;
+		constexpr static uintptr_t bIsStunned = 0xAC8;
+		constexpr static uintptr_t LastDamagedTime = 0xCE0;
+		constexpr static uintptr_t LastTakeHitTimeTimeout = 0xCDC;
+		
+		constexpr static uintptr_t bIsJumping = 0x988;
+		constexpr static uintptr_t bIsSliding = 0x72B;
+		constexpr static uintptr_t bIsSkating = 0x72B;
+		constexpr static uintptr_t bIsSwinging = 0x751;
+		constexpr static uintptr_t bIsSlopeSliding = 0x88C;
+		constexpr static uintptr_t CurrentMovementStyle = 0x843;
+		constexpr static uintptr_t TeleportCounter = 0x845;
+		
+		constexpr static uintptr_t bWeaponHolstered = 0x829;
+		constexpr static uintptr_t bWeaponActivated = 0x72B;
+		constexpr static uintptr_t bPrimaryInputHeld = 0x72A;
+		constexpr static uintptr_t bSecondaryInputHeld = 0x72A;
+		constexpr static uintptr_t bPrimaryInputQueued = 0x72B;
+		
+		constexpr static uintptr_t bMovingEmote = 0x729;
+		constexpr static uintptr_t EmoteCount = 0xF60;
+		constexpr static uintptr_t LastEmoteTime = 0xF64;
+		constexpr static uintptr_t LastEmoteEndTime = 0xF68;
+		constexpr static uintptr_t EmoteWalkSpeed = 0xF88;
+		
+		constexpr static uintptr_t PawnStatHandle = 0x868;
+		constexpr static uintptr_t HealthSet = 0x1370;
+		constexpr static uintptr_t DamageSet = 0x1380;
+		constexpr static uintptr_t MovementSet = 0x1388;
+		constexpr static uintptr_t AdvancedMovementSet = 0x1390;
+		constexpr static uintptr_t AbilitySystemComponent = 0x13F8;
+		
+		constexpr static uintptr_t TotalPlayerDamageDealt = 0x149C;
+		constexpr static uintptr_t TotalPlayerDamageTaken = 0x14A0;
+		constexpr static uintptr_t LastHitTime = 0x1498;
+		constexpr static uintptr_t DamageDoneLastAtTime = 0x1490;
+		constexpr static uintptr_t DamageTakenLastAtTime = 0x1494;
+		
+		constexpr static uintptr_t SoundIndicatorComponent = 0x810;
+		constexpr static uintptr_t FootstepBank = 0x10A8;
+		constexpr static uintptr_t SoundLibraryComponent = 0xD60;
+		constexpr static uintptr_t EmoteComponent = 0x1098;
+		
+		constexpr static uintptr_t PawnUniqueID = 0x98C;
+		constexpr static uintptr_t bHealthSynced = 0x829;
+		constexpr static uintptr_t JumpFlashCountPacked = 0xE00;
+		constexpr static uintptr_t LandingFlashCountPacked = 0xE01;
+	};
+
+	class USkeletalMeshComponent
+	{
+	public:
+		constexpr static uintptr_t BoneArray = 0x5F0;
+		constexpr static uintptr_t BoneArrayCached = BoneArray + 0x10;
+	};
+
+	class USceneComponent
+	{
+	public:
+		constexpr static uintptr_t RelativeLocation = 0x140;
+		constexpr static uintptr_t RelativeRotation = 0x158;
+		constexpr static uintptr_t ComponentVelocity = 0x188;
+		constexpr static uintptr_t ComponentToWorld = 0x1E0;
+	};
+
+	class AFortWeapon
+	{
+	public:
+		constexpr static uintptr_t WeaponData = 0x5F8;
+		constexpr static uintptr_t AmmoCount = 0x14FC;
+		constexpr static uintptr_t TargetedFortPawn = 0x1830;
+		constexpr static uintptr_t ProjectileSpeed = 0x24AC;
+		constexpr static uintptr_t ProjectileGravity = 0x24B0;
+		
+		constexpr static uintptr_t TimeToEquip = 0x38C;
+		constexpr static uintptr_t bIsEquippingWeapon = 0x3B0;
+		constexpr static uintptr_t bIsChargingWeapon = 0x3C8;
+		constexpr static uintptr_t bIsReloadingWeapon = 0x3C9;
+		constexpr static uintptr_t bDisableEquipAnimation = 0x3C9;
+		constexpr static uintptr_t bIsTargeting = 0x13A8;
+		constexpr static uintptr_t bAllowTargeting = 0x13A8;
+		constexpr static uintptr_t LastFireTime = 0x1394;
+		constexpr static uintptr_t LastFireTimeVerified = 0x1398;
+		constexpr static uintptr_t LastReloadTime = 0x1420;
+		constexpr static uintptr_t LastSuccessfulReloadTime = 0x1424;
+		constexpr static uintptr_t CurrentReloadDuration = 0x1428;
+		constexpr static uintptr_t BurstFireCounter = 0x1488;
+		constexpr static uintptr_t ChargeTime = 0x148C;
+		constexpr static uintptr_t AccumulatedChargeTime = 0x1490;
+		constexpr static uintptr_t LastChargeTime = 0x1494;
+		
+		constexpr static uintptr_t WeaponMesh = 0x12A8;
+		constexpr static uintptr_t ReticleImage = 0xC10;
+		constexpr static uintptr_t ReticleCenterImage = 0xC50;
+		constexpr static uintptr_t ReticleCenterPerfectAimImage = 0xC58;
+		constexpr static uintptr_t MuzzleBlockedReticleImage = 0xC68;
+		
+		constexpr static uintptr_t PrimaryFireSound1P = 0xCE8;
+		constexpr static uintptr_t PrimaryFireSound = 0xCF0;
+		constexpr static uintptr_t SecondaryFireSound = 0xD28;
+		constexpr static uintptr_t ChargeFireSound1P = 0xD58;
+		constexpr static uintptr_t ChargeFireSound = 0xD70;
+		
+		constexpr static uintptr_t PrimaryAbilitySpecHandle = 0x1580;
+		constexpr static uintptr_t SecondaryAbilitySpecHandle = 0x1584;
+		constexpr static uintptr_t ReloadAbilitySpecHandle = 0x1588;
+		constexpr static uintptr_t ImpactAbilitySpecHandle = 0x158C;
+		
+		constexpr static uintptr_t AppliedItemWrap = 0x16E8;
+		constexpr static uintptr_t ItemWrapModifier = 0x1B00;
+		
+		constexpr static uintptr_t WeaponEquipMontage = 0x1948;
+		constexpr static uintptr_t WeaponReloadMontage = 0x1950;
+		constexpr static uintptr_t WeaponPrimaryAbilityMontage = 0x1968;
+		constexpr static uintptr_t WeaponSecondaryAbilityMontage = 0x1970;
+	};
+
+	class UFortWeaponItemDefinition
+	{
+	public:
+
+		constexpr static uintptr_t WeaponActorClass = 0xC8;
+		constexpr static uintptr_t WeaponMeshOverride = 0xE8;
+		constexpr static uintptr_t IntrinsicOverrideWrap = 0x110;
+		constexpr static uintptr_t WeaponStatHandle = 0x130;
+		constexpr static uintptr_t AbilitySet = 0x150;
+		constexpr static uintptr_t AlterationSlotsLoadoutRow = 0x170;
+		constexpr static uintptr_t BaselineAlterationSlotsLoadoutRow = 0x174;
+		constexpr static uintptr_t BaseAlteration = 0x178;
+		constexpr static uintptr_t BaseCosmeticAlteration = 0x198;
+		constexpr static uintptr_t PrimaryFireAbility = 0x1B8;
+		constexpr static uintptr_t SecondaryFireAbility = 0x1F8;
+		constexpr static uintptr_t EquippedAbilities = 0x238;
+		constexpr static uintptr_t EquippedAbilitySet = 0x248;
+		constexpr static uintptr_t AmmoData = 0x268;
+		constexpr static uintptr_t AdditionalDataFields = 0x288;
+		constexpr static uintptr_t LowAmmoPercentage = 0x298;
+		constexpr static uintptr_t TriggerType = 0x29C;
+		constexpr static uintptr_t SecondaryTriggerType = 0x29D;
+		constexpr static uintptr_t DisplayTier = 0x29E;
+		constexpr static uintptr_t bRechargeAmmoToClip = 0x29F;
+		constexpr static uintptr_t bUsesPhantomReserveAmmo = 0x29F;
+		constexpr static uintptr_t bUsesCustomAmmoType = 0x29F;
+		constexpr static uintptr_t bAllowTargetingDuringReload = 0x2A0;
+		constexpr static uintptr_t bTargetingPreventsReload = 0x2A0;
+		constexpr static uintptr_t bAllowAutoReload = 0x2A0;
+		constexpr static uintptr_t bCanFireWhileInstigatorTethered = 0x2A0;
+		constexpr static uintptr_t bAlwaysChargeUpToMin = 0x2A0;
+		constexpr static uintptr_t bEndAbilityOnChargeEnd = 0x2A0;
+		constexpr static uintptr_t HitNotifyDuration = 0x2A4;
+		constexpr static uintptr_t ReticleImage = 0x2A8;
+		constexpr static uintptr_t ReticleCornerAngles = 0x2C8;
+		constexpr static uintptr_t ReticleCenterImage = 0x2D8;
+		constexpr static uintptr_t ReticleCenterPerfectAimImage = 0x2F8;
+		constexpr static uintptr_t ReticleCenterImageOffset = 0x318;
+		constexpr static uintptr_t ReticleInvalidTargetImage = 0x328;
+		constexpr static uintptr_t AnalyticTags = 0x348;
+		constexpr static uintptr_t PlayerGrantedGameplayTags = 0x368;
+		constexpr static uintptr_t CosmeticGatingTags = 0x388;
+		constexpr static uintptr_t ActualAnalyticFNames = 0x3A8;
+		constexpr static uintptr_t RequiredWeaponParent = 0x3B8;
+		constexpr static uintptr_t BoneSetsToHide = 0x3D8;
+		constexpr static uintptr_t WeaponMovementSpeedStats = 0x3F8;
+		constexpr static uintptr_t CreativeTagsHelper = 0x4B8;
+	};
 }
 
-inline namespace UGameInstance {
-	inline constexpr uintptr_t LocalPlayers = 0x38; // TArray<ULocalPlayer*> LocalPlayers
-
-}
-
-inline namespace ULocalPlayer {
-	inline constexpr uintptr_t PlayerController = 0x30; // APlayerController* PlayerController
-
-}
-
-inline namespace APlayerController {
-	inline constexpr uintptr_t PlayerState = 0x2D0; // APlayerState* PlayerState
-	inline constexpr uintptr_t AcknowledgedPawn = 0x358; // APawn* AcknowledgedPawn
-	inline constexpr uintptr_t PlayerCameraManager = 0x360; // PlayerCameraManager* PlayerCameraManager
-
-}
-
-inline namespace ACharacter {
-	inline constexpr uintptr_t Mesh = 0x330; // USkeletalMeshComponent* Mesh
-	inline constexpr uintptr_t BoneArray = 0x5F0; // TArray<FNAME> BoneArray
-	inline constexpr intptr_t BoneArrayCached = 0x608; // TArray<FNAME> BoneArray + 0x10 
-
-}
-
-inline namespace APlayerState {
-	inline constexpr uintptr_t PawnPrivate = 0x328; // APawn* PawnPrivate
-
-}
-
-inline namespace AFortPlayerState  {
-	inline constexpr uintptr_t Platform = 0x440; // FString Platform
-	inline constexpr uintptr_t PlayerName = 0xA08; // FString PlayerName
-	inline constexpr uintptr_t HabaneroComponent = 0x948; // UFortHabaneroComponent* HabaneroComponent
-	inline constexpr uintptr_t RankedProgress = 0xD8; // int32_t RankedProgress
-
-}
-
-inline namespace AFortPlayerStateAthena{
-	inline constexpr uintptr_t TeamIndex = 0x11B1; // int32_t TeamIndex
-
-}
-
-inline namespace AGameStateBase {
-	inline constexpr uintptr_t PlayerArray = 0x2C8; // TArray<APlayerState*> PlayerArray
-
-}
-
-inline namespace AFortPawn {
-	inline constexpr uintptr_t CurrentWeapon = 0x990; // AFortWeapon* CurrentWeapon
-
-}
-
-inline namespace AFortWeapon {
-	inline constexpr uintptr_t WeaponData = 0x600; // UFortWeaponItemDefinition* WeaponData
-	inline constexpr uintptr_t AmmoCount = 0x11CC; // int32_t AmmoCount
-	inline constexpr uintptr_t ProjectileSpeed = 0x29DC; // ???
-	inline constexpr uintptr_t ProjectileGravity = 0x29E0; // ???
-	inline constexpr uintptr_t TargetedFortPawn = 0x1830;
-
-}
-
-inline namespace AActor {
-	inline constexpr uintptr_t RootComponent = 0x1b0; // USceneComponent* RootComponent
-
-}
-
-inline namespace USceneConponent {
-	inline constexpr uintptr_t RelativeRotation = 0x158; // FRotator RelativeRotation
-	inline constexpr uintptr_t RelativeLocation = 0x140; // FVector RelativeLocation
-	inline constexpr uintptr_t ComponentToWorld = 0x1e0; // FTransform ComponentToWorld
-	inline constexpr uintptr_t ComponentVelocity = 0x188; // FVector ComponentVelocity
-
-}
