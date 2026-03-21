@@ -1,11 +1,10 @@
-Fortnite Build : ++Fortnite+Release-39.40-CL-50577083-Windows
+Fortnite Build : ++Fortnite+Release-40.00-CL-51995682-Windows
 
-UnrealEngine ver: 5.8.0
+Game UE  = UnrealEngine 5
 
 class UnrealWorldDecryption {
 
 public:
-
 
     inline uint64_t ROL8(uint64_t value, int shift) {
         shift &= 63;
@@ -13,21 +12,28 @@ public:
         return (value << shift) | (value >> (64 - shift));
     }
 
-    inline uint64_t DecryptWorld(uint64_t world)
+
+    inline uint64_t DecryptWorld(uint64_t World)
     {
-        return  ~ROL8(world ^ 0x913F0DAFLL, 51);
+        return std::rotl(World, 32) ^ 0x35E5647853A0CBFULL;
     }
 
 
 }; UnrealWorldDecryption* Decryption;
-use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(VirtualGlx + Offsets::Engine::GWorld)); 
+
+
+
+use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(StoredBase + Offsets::Engine::GWorld)); 
 
 namespace Offsets
 {
 
 	namespace Engine
 	{
-		constexpr uintptr_t GWorld = 0x1780BA78; // 48 33 05 ?? ?? ?? ?? 48 8B 80 50 01 00 00 48 85 C0 0F 84
+		constexpr uintptr_t GWorld = 0x19401C60; //48 33 05 ?? ?? ?? ??
+
+	    // GetRarity =  E8 ? ? ? ? 4C 8D 74 24 ? 4C 89 F1 48 89 C2 E8 ? ? ? ? 48 8D 54 24                             
+	
 		constexpr uintptr_t GNames = 0x17A50D00;
 	}
 
@@ -36,7 +42,7 @@ namespace Offsets
 	public:
 		constexpr static uintptr_t GameState = 0x1D8;
 		constexpr static uintptr_t OwningGameInstance = 0x250;
-		constexpr static uintptr_t PersistentLevel = 0x40;
+		constexpr static uintptr_t PersistentLevel = 0x38;
 		constexpr static uintptr_t CameraLocation = 0x180;
 		constexpr static uintptr_t CameraRotation = 0x190;
 	};
@@ -56,9 +62,9 @@ namespace Offsets
 	class APlayerController
 	{
 	public:
-		constexpr static uintptr_t PlayerState = 0x2D0;
+		constexpr static uintptr_t PlayerState = 0x2B8;
 		constexpr static uintptr_t AcknowledgedPawn = 0x358;
-		constexpr static uintptr_t PlayerCameraManager = 0x360;
+		constexpr static uintptr_t PlayerCameraManager = 0x368;
 	};
 
 	class APlayerState
@@ -162,28 +168,32 @@ namespace Offsets
 	class USkeletalMeshComponent
 	{
 	public:
-		constexpr static uintptr_t BoneArray = 0x5F0;
+
+		constexpr static uintptr_t BoneArray = 0x628;
 		constexpr static uintptr_t BoneArrayCached = BoneArray + 0x10;
+
 	};
 
 	class USceneComponent
 	{
 	public:
+
 		constexpr static uintptr_t RelativeLocation = 0x140;
 		constexpr static uintptr_t RelativeRotation = 0x158;
 		constexpr static uintptr_t ComponentVelocity = 0x188;
 		constexpr static uintptr_t ComponentToWorld = 0x1E0;
+
 	};
 
 	class AFortWeapon
 	{
 	public:
-		constexpr static uintptr_t WeaponData = 0x5F8;
+
+		constexpr static uintptr_t WeaponData = 0x638;
 		constexpr static uintptr_t AmmoCount = 0x14FC;
 		constexpr static uintptr_t TargetedFortPawn = 0x1830;
-		constexpr static uintptr_t ProjectileSpeed = 0x24AC;
-		constexpr static uintptr_t ProjectileGravity = 0x24B0;
-		
+		constexpr static uintptr_t ProjectileSpeed = 0x26CC;
+		constexpr static uintptr_t ProjectileGravity = 0x26D0;
 		constexpr static uintptr_t TimeToEquip = 0x38C;
 		constexpr static uintptr_t bIsEquippingWeapon = 0x3B0;
 		constexpr static uintptr_t bIsChargingWeapon = 0x3C8;
@@ -200,27 +210,22 @@ namespace Offsets
 		constexpr static uintptr_t ChargeTime = 0x148C;
 		constexpr static uintptr_t AccumulatedChargeTime = 0x1490;
 		constexpr static uintptr_t LastChargeTime = 0x1494;
-		
 		constexpr static uintptr_t WeaponMesh = 0x12A8;
 		constexpr static uintptr_t ReticleImage = 0xC10;
 		constexpr static uintptr_t ReticleCenterImage = 0xC50;
 		constexpr static uintptr_t ReticleCenterPerfectAimImage = 0xC58;
 		constexpr static uintptr_t MuzzleBlockedReticleImage = 0xC68;
-		
 		constexpr static uintptr_t PrimaryFireSound1P = 0xCE8;
 		constexpr static uintptr_t PrimaryFireSound = 0xCF0;
 		constexpr static uintptr_t SecondaryFireSound = 0xD28;
 		constexpr static uintptr_t ChargeFireSound1P = 0xD58;
 		constexpr static uintptr_t ChargeFireSound = 0xD70;
-		
 		constexpr static uintptr_t PrimaryAbilitySpecHandle = 0x1580;
 		constexpr static uintptr_t SecondaryAbilitySpecHandle = 0x1584;
 		constexpr static uintptr_t ReloadAbilitySpecHandle = 0x1588;
 		constexpr static uintptr_t ImpactAbilitySpecHandle = 0x158C;
-		
 		constexpr static uintptr_t AppliedItemWrap = 0x16E8;
 		constexpr static uintptr_t ItemWrapModifier = 0x1B00;
-		
 		constexpr static uintptr_t WeaponEquipMontage = 0x1948;
 		constexpr static uintptr_t WeaponReloadMontage = 0x1950;
 		constexpr static uintptr_t WeaponPrimaryAbilityMontage = 0x1968;
