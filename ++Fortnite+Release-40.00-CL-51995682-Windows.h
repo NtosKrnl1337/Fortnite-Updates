@@ -13,26 +13,34 @@ public:
     }
 
 
-    inline uint64_t DecryptWorld(uint64_t World)
-    {
-        return std::rotl(World, 32) ^ 0x35E5647853A0CBFULL;
-    }
+   static inline uintptr_t get_world()
+{
+  
+    uint64_t v = Glxymem->read<uint64_t>(StoredBase + Offsets::Engine::GWorld);
+    if (!v)
+        return 0;
 
+    v = 3050176034ULL - v + 326602957ULL;
+
+
+
+    return static_cast<uintptr_t>(v);
 
 }; UnrealWorldDecryption* Decryption;
 
 
 
-use Exapmle : Cached::Gworld = Decryption->DecryptWorld(Glxymem->read<uintptr_t>(StoredBase + Offsets::Engine::GWorld)); 
+use Exapmle : Cached::Gworld = get_world();
 
 namespace Offsets
 {
 
 	namespace Engine
 	{
-		constexpr uintptr_t GWorld = 0x19401C60; //48 33 05 ?? ?? ?? ??
+		constexpr uintptr_t GWorld = 0x1963D8F0; //48 33 05 ?? ?? ?? ??
+        constexpr uintptr_t GEngine = 0x1963F198;
 
-	    // GetRarity =  E8 ? ? ? ? 4C 8D 74 24 ? 4C 89 F1 48 89 C2 E8 ? ? ? ? 48 8D 54 24                             
+	 // GetRarity =  E8 ? ? ? ? 4C 8D 74 24 ? 4C 89 F1 48 89 C2 E8 ? ? ? ? 48 8D 54 24                             
 	
 		constexpr uintptr_t GNames = 0x17A50D00;
 	}
@@ -40,8 +48,8 @@ namespace Offsets
 	class UWorld
 	{
 	public:
-		constexpr static uintptr_t GameState = 0x1D8;
-		constexpr static uintptr_t OwningGameInstance = 0x250;
+		constexpr static uintptr_t GameState = 0x1c8;
+		constexpr static uintptr_t OwningGameInstance = 0x240;
 		constexpr static uintptr_t PersistentLevel = 0x38;
 		constexpr static uintptr_t CameraLocation = 0x180;
 		constexpr static uintptr_t CameraRotation = 0x190;
