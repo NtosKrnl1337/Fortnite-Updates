@@ -30,7 +30,7 @@ public:
 
 
 
-use Exapmle : Cached::Gworld = get_world();
+use Exapmle : Cached::Gworld = Decryption->get_world();
 
 namespace Offsets
 {
